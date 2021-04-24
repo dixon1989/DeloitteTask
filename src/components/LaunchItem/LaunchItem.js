@@ -33,32 +33,44 @@ const LaunchItem = ({
     </div>
     <div className={styles.detailsContainer}>
       <p className={styles.title}>
-        {rocketName} 
-        {missionFailed === 'true' ? <span><span> -{' '}</span> <span className={styles.failed}>Failed Mission</span></span> : null }
+        {rocketName + " - " + payloadId} 
+        {missionFailed ? <span><span> -{' '}</span> <span className={styles.failed}>Failed Mission</span></span> : null }
       </p>
       <p className={styles.subtitle}>
         Launched <strong>{moment(launchDate).format('Do MMMM YYYY')}</strong> at <strong>{moment(launchDate).format('h.ssa')}</strong>{' '}
         from <strong>{launchSiteName}</strong>
       </p>
       <div className={styles.links}>
-        <a href={redditCampaignLink} className={styles.link}>
-          Reddit Campaign
-        </a>
+        {redditCampaignLink ?         
+          <a href={redditCampaignLink} className={styles.link}>
+            Reddit Campaign
+          </a> 
+        : null }
+        {redditLaunchLink ? 
         <a href={redditLaunchLink} className={styles.link}>
           Reddit Launch
         </a>
+        : null }
+        {redditMediaLink ?
         <a href={redditMediaLink} className={styles.link}>
           Reddit Media
         </a>
+        : null }
+        {pressKitLink ?
         <a href={pressKitLink} className={styles.link}>
           Press Kit
         </a>
+        : null }
+        {articleLink ?
         <a href={articleLink} className={styles.link}>
           Article
         </a>
+        : null }
+        {videoLink ?
         <a href={videoLink} className={styles.link}>
           Watch Video
         </a>
+        : null }
       </div>
     </div>
     <dl className={styles.flightNumber}>

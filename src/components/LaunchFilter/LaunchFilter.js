@@ -57,14 +57,28 @@ class LaunchFilter extends React.Component {
     return (
       <section className={styles.launchFilter}>
         <TextInput
-          placeholder="some placeholder"
-          label="Example Text Input"
+          placeholder="eg Falcon"
+          label="Keywords"
           value={exampleInput}
           onChange={this.handleInputChange}
           uid="example-text-input"
         />
         <Select
-          label="Example Select"
+          label="Launch Pad"
+          value={selectedOption}
+          onChange={this.handleChange}
+          options={options}
+          uid="example-select"
+        />
+        <Select
+          label="Min Year"
+          value={selectedOption}
+          onChange={this.handleChange}
+          options={options}
+          uid="example-select"
+        />
+        <Select
+          label="Max Year"
           value={selectedOption}
           onChange={this.handleChange}
           options={options}
