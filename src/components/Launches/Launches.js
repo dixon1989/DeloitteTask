@@ -4,6 +4,9 @@ import LaunchItem from '../LaunchItem';
 
 import styles from './launches.module.scss';
 
+import { getRocketData } from '../../api';
+
+
 /**
  * Launches component responsible for showing the filter component,
  * handling the fetching and filtering of the launch data and rendering
@@ -26,6 +29,15 @@ class Launches extends React.Component {
     };
   }
 
+  componentDidMount = async () => {
+    try {
+      let request = await getRocketData();
+      this.setState({ launches: request.results })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   handleFilterChange = filter => {};
 
   /**
@@ -33,20 +45,22 @@ class Launches extends React.Component {
    * into a usable and consistent format for the LaunchItem component
    */
   _launchDataTransform = (launchResp, launchPads) => {
+    console.log("launchResp", launchResp)
+    // console.log("launchPads", launchPads)
     const resultObj = {
-      rocketName: null,
-      payloadId: null,
-      launchDate: null,
-      launchSiteName: null,
-      flightNumber: null,
-      missionFailed: null,
-      missionPatchLink: null,
-      redditCampaignLink: null,
-      redditLaunchLink: null,
-      redditMediaLink: null,
-      pressKitLink: null,
-      articleLink: null,
-      videoLink: null,
+      rocketName: launchResp.rocketName,
+      payloadId: launchResp.payloadId,
+      launchDate: launchResp.launchDate,
+      launchSiteName: launchResp.launchSiteName,
+      flightNumber: launchResp.flightNumber,
+      missionFailed: launchResp.missionFailed.toString(),
+      missionPatchLink: launchResp.missionPatchLink,
+      redditCampaignLink: launchResp.redditCampaignLink,
+      redditLaunchLink: launchResp.redditLaunchLink,
+      redditMediaLink: launchResp.redditMediaLink,
+      pressKitLink: launchResp.pressKitLink,
+      articleLink: launchResp.articleLink,
+      videoLink: launchResp.videoLink,
     };
 
     return resultObj;
@@ -66,15 +80,16 @@ class Launches extends React.Component {
       .map(l => this._launchDataTransform(l, launchPadData))
       .filter(launchFilter);
 
-    return filteredLaunches.map(l => <LaunchItem {...l} />);
+    return filteredLaunches.map(l => <LaunchItem key={l.payloadId} {...l} />);
   };
 
   render() {
+    const { launches } = this.state;
     return (
       <section className={`${styles.launches} layout-l`}>
         <LaunchFilter onFilterChange={this.handleFilterChange} />
         <div className={styles.summary}>
-          <p>Showing 2 Missions</p>
+          <p>Showing {launches.length} Missions</p>
         </div>
         {this._renderLaunches()}
 
@@ -82,8 +97,8 @@ class Launches extends React.Component {
             Example launch items, you should remove these once you have
             implemented the rendering logic 
         */}
-        <LaunchItem />
-        <LaunchItem />
+        {/* <LaunchItem />
+        <LaunchItem /> */}
       </section>
     );
   }

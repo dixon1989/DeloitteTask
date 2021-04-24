@@ -27,42 +27,42 @@ const LaunchItem = ({
       <img
         className={styles.patch}
         alt="Mission patch"
-        src="http://spacexpatchlist.space/images/thumbs/falcon_1_flight_1.png"
+        src={missionPatchLink}
       />
     </div>
     <div className={styles.detailsContainer}>
       <p className={styles.title}>
-        Falcon 9 - Echostar 105 -{' '}
-        <span className={styles.failed}>Failed Mission</span>
+        {rocketName} 
+        {missionFailed === 'true' ? <span><span> -{' '}</span> <span className={styles.failed}>Failed Mission</span></span> : null }
       </p>
       <p className={styles.subtitle}>
         Launched <strong>11th October 2017</strong> at <strong>6:53pm</strong>{' '}
-        from <strong>Kennedy Space Center Launch Complex 39A</strong>
+        from <strong>{launchSiteName}</strong>
       </p>
       <div className={styles.links}>
-        <a href="." className={styles.link}>
+        <a href={redditCampaignLink} className={styles.link}>
           Reddit Campaign
         </a>
-        <a href="." className={styles.link}>
+        <a href={redditLaunchLink} className={styles.link}>
           Reddit Launch
         </a>
-        <a href="." className={styles.link}>
+        <a href={redditMediaLink} className={styles.link}>
           Reddit Media
         </a>
-        <a href="." className={styles.link}>
+        <a href={pressKitLink} className={styles.link}>
           Press Kit
         </a>
-        <a href="." className={styles.link}>
+        <a href={articleLink} className={styles.link}>
           Article
         </a>
-        <a href="." className={styles.link}>
+        <a href={videoLink} className={styles.link}>
           Watch Video
         </a>
       </div>
     </div>
     <dl className={styles.flightNumber}>
       <dt>Flight Number</dt>
-      <dd>#49</dd>
+      <dd>#{flightNumber}</dd>
     </dl>
   </article>
 );

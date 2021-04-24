@@ -41,7 +41,7 @@ class App extends Component {
       content.current.scrollIntoView({ 
           behavior: "smooth"
       })
-  }
+    }
   }
 
   render() {
