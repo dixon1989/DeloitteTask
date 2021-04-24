@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import styles from './launch-item.module.scss';
+import moment from 'moment';
 
 /**
  * Launch Item renders all the details of a 
@@ -36,7 +37,7 @@ const LaunchItem = ({
         {missionFailed === 'true' ? <span><span> -{' '}</span> <span className={styles.failed}>Failed Mission</span></span> : null }
       </p>
       <p className={styles.subtitle}>
-        Launched <strong>11th October 2017</strong> at <strong>6:53pm</strong>{' '}
+        Launched <strong>{moment(launchDate).format('Do MMMM YYYY')}</strong> at <strong>{moment(launchDate).format('h.ssa')}</strong>{' '}
         from <strong>{launchSiteName}</strong>
       </p>
       <div className={styles.links}>
