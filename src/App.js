@@ -11,12 +11,20 @@ import Launches from './components/Launches';
  */
 class App extends Component {
 
+  constructor(props){
+    super(props)
+    //creates a reference for your element to use
+    this.myMainContent = React.createRef()
+ }
+
   /**
    * The header component contains a scroll down button that when clicked
    * should scroll the page down to where the main content starts
    */
   handleScrollClick = () => {
     alert('Implement scroll down logic');
+      // This function will define where the ref is and scroll to the ref
+      this.handleReusableComponent(this.myMainContent)
   };
 
   /**
@@ -25,13 +33,22 @@ class App extends Component {
    */
   handleBackToTopClick = () => {
     alert('Implement back to top logic');
+    this.handleReusableComponent(this.myMainContent)
   };
+
+  handleReusableComponent = (content) => {
+    if(content.current){
+      content.current.scrollIntoView({ 
+          behavior: "smooth"
+      })
+  }
+  }
 
   render() {
     return (
       <div className="App">
         <Header onScrollClick={this.handleScrollClick} />
-        <main>
+        <main ref={this.myMainContent}>
           <Launches />
         </main>
         <Footer onBackToTopClick={this.handleBackToTopClick} />
