@@ -25,11 +25,13 @@ const LaunchItem = ({
 }) => (
   <article className={styles.launchItem}>
     <div className={styles.patchContainer}>
+      {missionPatchLink ? 
       <img
         className={styles.patch}
         alt="Mission patch"
         src={missionPatchLink}
       />
+    : null}
     </div>
     <div className={styles.detailsContainer}>
       <p className={styles.title}>

@@ -17,13 +17,11 @@ const options = [{ value: null, label: 'Any' }];
 class LaunchFilter extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       keywords: '',
-      launchPad: null,
-      minYear: null,
-      maxYear: null,
-
+      launchPad: 'Any',
+      minYear: 'Any',
+      maxYear: 'Any',
       // example state you will need to remove
       selectedOption: options[0],
       exampleInput: '',
@@ -31,10 +29,18 @@ class LaunchFilter extends React.Component {
   }
 
   // some change handlers ready for you
-  handleKeywordChange = () => {};
-  handleLaunchPadChange = () => {};
-  handleMinYearChange = () => {};
-  handleMaxYearChange = () => {};
+  handleKeywordChange = value => {
+    this.setState({ exampleInput: value });
+  };
+  handleLaunchPadChange = selectedOption => {
+    this.setState({ launchPad: selectedOption });
+  };
+  handleMinYearChange = selectedOption => {
+    this.setState({ minYear: selectedOption });
+  };
+  handleMaxYearChange = selectedOption => {
+    this.setState({ maxYear: selectedOption });
+  };
 
   // and example change handler for a <Select /> element
   handleChange = selectedOption => {
@@ -48,12 +54,29 @@ class LaunchFilter extends React.Component {
 
   // handler for calling the filter update
   handleFilterUpdate = () => {
-    alert('Implement filter update logic');
+    //alert('Implement filter update logic');
+    const { exampleInput, launchPad, minYear, maxYear } = this.state
+
+    if(minYear.value !== undefined && maxYear.value !== undefined) {
+      if(minYear.value > maxYear.value) {
+        alert("min Year cannot be more than max Year")
+        return
+      }
+    }
+
+    let filter = {
+      minYear: minYear.value !== undefined ? minYear.value : minYear,
+      maxYear: maxYear.value !== undefined ? maxYear.value : maxYear,
+      keywords: exampleInput,
+      launchPad: launchPad.value !== undefined ? launchPad.value : launchPad,
+    }
+     this.props.onFilterChange(filter)
   };
 
   render() {
-    const { selectedOption, exampleInput } = this.state;
-
+    const { exampleInput, launchPad, minYear, maxYear } = this.state;
+    const { filterOptions } = this.props;
+    if (filterOptions.minYear !== null) {
     return (
       <section className={styles.launchFilter}>
         <TextInput
@@ -65,23 +88,23 @@ class LaunchFilter extends React.Component {
         />
         <Select
           label="Launch Pad"
-          value={selectedOption}
-          onChange={this.handleChange}
-          options={options}
+          value={launchPad !== 'Any' ? launchPad : filterOptions.launchPad[0]}
+          onChange={this.handleLaunchPadChange}
+          options={filterOptions.launchPad}
           uid="example-select"
         />
         <Select
           label="Min Year"
-          value={selectedOption}
-          onChange={this.handleChange}
-          options={options}
+          value={minYear !== 'Any' ? minYear : filterOptions.minYear[0]}
+          onChange={this.handleMinYearChange}
+          options={filterOptions.minYear}
           uid="example-select"
         />
         <Select
           label="Max Year"
-          value={selectedOption}
-          onChange={this.handleChange}
-          options={options}
+          value={maxYear !== 'Any' ? maxYear : filterOptions.minYear[0]}
+          onChange={this.handleMaxYearChange}
+          options={filterOptions.maxYear}
           uid="example-select"
         />
         <Button onClick={this.handleFilterUpdate} type={BUTTON_TYPES.PRIMARY}>
@@ -89,6 +112,9 @@ class LaunchFilter extends React.Component {
         </Button>
       </section>
     );
+  } else {
+    return null
+  }
   }
 }
 
@@ -96,11 +122,13 @@ LaunchFilter.propTypes = {
 
   // used to let parent component know about changes
   // to the filters
-  onFilterChange: PropTypes.func
+  onFilterChange: PropTypes.func,
+  filterOptions: PropTypes.object
 }
 
 LaunchFilter.defaultProps = {
   onFilterChange: () => {},
+  filterOptions: {}
 }
 
 export default LaunchFilter;

@@ -21,12 +21,18 @@ class Launches extends React.Component {
       isLoading: false,
       error: null,
       launches: [],
+      filter_launches: [],
       filter: {
         minYear: null,
         maxYear: null,
         keywords: null,
         launchPad: null,
       },
+      filterOptions: {
+        minYear: null,
+        maxYear: null,
+        launchPad: null,
+      }
     };
   }
 
@@ -38,40 +44,44 @@ class Launches extends React.Component {
       console.log(e)
     }
     this.setFilter()
-    console.log("AAAAA", this.state.filter)
   }
 
   setFilter = () => {
     const { launches } = this.state;
-    let keyWords = [];
-    let flightNumber = [...new Set(launches.map(x => x.flight_number.toString()))]
-    let rocketName = [...new Set(launches.map(x => x.rocket.rocket_name))]
-    let payLoads = [...new Set(launches.map(x => x.payloads[0].payload_id))]
+    let distinctYearOptions = [{ value: null, label: 'Any' }];
+    let launchPadOptions = [{ value: null, label: 'Any' }];
     let distinctYear = [...new Set(launches.map(x => moment(x.launch_date_local).format('YYYY')))]
     let launchPad = [...new Set(launches.map(x => x.launch_site.site_name))]
-    keyWords.push(...flightNumber, ...rocketName, ...payLoads)
+    distinctYear.forEach(element => distinctYearOptions.push({value: element, label: element}));
+    launchPad.forEach(element => launchPadOptions.push({value: element, label: element}));
+
     this.setState({
-      filter: {
-        ...this.state.filter,
-        minYear: distinctYear,
-        maxYear: distinctYear,
-        keywords: keyWords,
-        launchPad
+      filterOptions: {
+        ...this.state.filterOptions,
+        minYear: distinctYearOptions,
+        maxYear: distinctYearOptions,
+        launchPad: launchPadOptions
       }
     })
   }
 
-  handleFilterChange = filter => {};
+  handleFilterChange = filter => {
+    const { launches } = this.state;
+    console.log(launches);
+    let filter_launches = launches.filter(element => element.launch_site.site_name === filter.launchPad);
+    this.setState({ filter_launches })
+    console.log("aaaaaa", filter_launches)
+  };
 
   /**
    * Responsible for transforming the data from the launch and launchpad api's
    * into a usable and consistent format for the LaunchItem component
    */
   _launchDataTransform = (launchResp, launchPads) => {
-    console.log("launchResp", launchResp)
-    // console.log("launchPads", launchPads)
+
     let isMissionFailed = false
     
+    // Valiate if either both landing and launch has failed or success
     if(launchResp.launch_success || launchResp.land_success !== undefined) {
       if (launchResp.launch_success === false || launchResp.land_success === false) {
         isMissionFailed = true
@@ -81,7 +91,7 @@ class Launches extends React.Component {
     } else {
       isMissionFailed = false
     }
-
+    // Assigning Params to respective Objects
     const resultObj = {
       rocketName: launchResp.rocket.rocket_name,
       payloadId: launchResp.payloads[0].payload_id,
@@ -102,9 +112,9 @@ class Launches extends React.Component {
   };
 
   _renderLaunches = () => {
-    const { launches } = this.state;
+    const { launches, filter } = this.state;
 
-    const launchPadData = [];
+    const launchPadData = filter.launchPad;
 
     const launchFilter = () => {
       // do something with the filter obj
@@ -119,21 +129,14 @@ class Launches extends React.Component {
   };
 
   render() {
-    const { launches } = this.state;
+    const { launches, filterOptions } = this.state;
     return (
       <section className={`${styles.launches} layout-l`}>
-        <LaunchFilter onFilterChange={this.handleFilterChange} />
+        <LaunchFilter filterOptions={filterOptions} onFilterChange={this.handleFilterChange} />
         <div className={styles.summary}>
           <p>Showing {launches.length} Missions</p>
         </div>
         {this._renderLaunches()}
-
-        {/* 
-            Example launch items, you should remove these once you have
-            implemented the rendering logic 
-        */}
-        {/* <LaunchItem />
-        <LaunchItem /> */}
       </section>
     );
   }
