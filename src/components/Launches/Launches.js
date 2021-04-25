@@ -45,6 +45,8 @@ class Launches extends React.Component {
     this.setFilter()
   }
 
+
+  // Set distict data for data filtering
   setFilter = () => {
     const { launches } = this.state;
     let distinctYearOptions = [{ value: 'Any', label: 'Any' }];
@@ -64,7 +66,9 @@ class Launches extends React.Component {
     })
   }
 
-  filteredWines = function (search, keys) {
+  // Filtered launches for either a flight number / rocket name / payload id
+
+  filteredLaunches = function (search, keys) {
     const { launches } = this.state;
     var lowSearch = search.toLowerCase();
       return launches.filter(function(element){
@@ -80,20 +84,19 @@ class Launches extends React.Component {
 
   handleFilterChange = filter => {
 
+    // Begin Filtering
+
     const { launches } = this.state;
 
-    let search_filter = this.filteredWines(filter.keywords, ['flight_number', 'rocket', 'payloads'])
+    let search_filter = this.filteredLaunches(filter.keywords, ['flight_number', 'rocket', 'payloads'])
 
     let isKeyword = search_filter ? search_filter : launches
 
     let filter_launches = isKeyword.filter((element) => {
 
-      // if minYear has been set (not any), but the launch year is less, reject it
       if (filter.minYear !== "Any" && moment(element.launch_date_local).format('YYYY') < filter.minYear) {
         return false;
       }
-
-      // same as above
       if (filter.maxYear !== "Any" && moment(element.launch_date_local).format('YYYY') > filter.maxYear) {
         return false;
       }
@@ -102,7 +105,7 @@ class Launches extends React.Component {
         return false;
       }
 
-      // Passes all filters, leave it in (don't reject it)
+      // Passes all filters
       return true;
     })
       this.setState({ filter, filter_launches})
@@ -113,6 +116,8 @@ class Launches extends React.Component {
    * into a usable and consistent format for the LaunchItem component
    */
   _launchDataTransform = (launchResp, launchPads) => {
+
+    // Transform Data
 
     let isMissionFailed = false
     
@@ -147,7 +152,7 @@ class Launches extends React.Component {
   
   };
 
-
+  // Object filtering wehther to use filtered if not filtered return all data
   objFilter = () => {
     const { launches, filter_launches, filter } = this.state;
   if (filter.minYear === 'Any' && filter.maxYear === 'Any' && filter.launchPad === 'Any' && filter.keywords === '') {
@@ -159,9 +164,7 @@ class Launches extends React.Component {
 
   _renderLaunches = () => {
     
-
     const launchPadData = [];
-
 
     const launchFilter = () => {
       // do something with the filter obj

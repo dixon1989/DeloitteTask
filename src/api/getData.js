@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// Get json Data from public folder - this is one of the option for data retrieval. Running server is recommended
 export const getRocketData = async () => {
       try {
         const req = await axios
