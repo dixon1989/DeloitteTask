@@ -6,15 +6,30 @@ Dependencies Added:
 - axios - https://yarnpkg.com/package/axios
 - moment - https://yarnpkg.com/package/moment
 
-Steps to run: 
+### API Server (IMPORTANT! Pleas Make sure that you run the server first If not please refer to 'What if you can't run api server?')
+
+Your solution will require interaction with a local API server that provides data.
+
+To start the server, use a separate terminal window with the following:
+
+1. Change into the `server` directory and run `npm install`
+2. Start the server via `npm run start`
+
+The following 2 endpoints will now be available.
+
+| Endpoint                             | Description                       |
+| ------------------------------------ | --------------------------------- |
+| http://localhost:8001/launches       | returns an array of launch data   |
+| http://localhost:8001/launchpads     | returns launchpads                |
+
+Steps to run Project: 
 1. navigate to your react folder look for ./deloittetask
 2. Install dependencies by running 'yarn' or 'npm install'
 3. Once dependencies has been installed. Run 'yarn start' / 'npm start'
 4. Enjoy
 
-How to run api server? 
+What if you can't run api server? 
 - The launch.json file is already located in this <root>/public/ folder.
-- You can choose to run your api from server as well. 
 - Location on where I retrieve data is located at src/api/getData.js
 - If you have a different way of retrieving data kindly modify it at src/api/getData.js
 

@@ -20,7 +20,7 @@ class Launches extends React.Component {
       isLoading: false,
       error: null,
       launches: [],
-      filter_launches: [],
+      filterLaunches: [],
       filter: {
         minYear: 'Any',
         maxYear: 'Any',
@@ -85,14 +85,13 @@ class Launches extends React.Component {
   handleFilterChange = filter => {
 
     // Begin Filtering
-
     const { launches } = this.state;
 
-    let search_filter = this.filteredLaunches(filter.keywords, ['flight_number', 'rocket', 'payloads'])
+    let searchFilter = this.filteredLaunches(filter.keywords, ['flight_number', 'rocket', 'payloads'])
 
-    let isKeyword = search_filter ? search_filter : launches
+    let isKeyword = searchFilter ? searchFilter : launches
 
-    let filter_launches = isKeyword.filter((element) => {
+    let filterLaunches = isKeyword.filter((element) => {
 
       if (filter.minYear !== "Any" && moment(element.launch_date_local).format('YYYY') < filter.minYear) {
         return false;
@@ -100,15 +99,13 @@ class Launches extends React.Component {
       if (filter.maxYear !== "Any" && moment(element.launch_date_local).format('YYYY') > filter.maxYear) {
         return false;
       }
-
       if (filter.launchPad !== "Any" && element.launch_site.site_name.indexOf(filter.launchPad) === -1) {
         return false;
       }
-
       // Passes all filters
       return true;
     })
-      this.setState({ filter, filter_launches})
+      this.setState({ filter, filterLaunches})
   };
 
   /**
@@ -154,11 +151,11 @@ class Launches extends React.Component {
 
   // Object filtering wehther to use filtered if not filtered return all data
   objFilter = () => {
-    const { launches, filter_launches, filter } = this.state;
+    const { launches, filterLaunches, filter } = this.state;
   if (filter.minYear === 'Any' && filter.maxYear === 'Any' && filter.launchPad === 'Any' && filter.keywords === '') {
     return launches
   } else {
-    return filter_launches
+    return filterLaunches
   }
 }
 
