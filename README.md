@@ -1,10 +1,10 @@
-Name: Dickson Lim
-Mobile: +61450482066
-Email: dixon.lim89@gmail.com
+- Name: Dickson Lim
+- Mobile: +61450482066
+- Email: dixon.lim89@gmail.com
 
 Dependencies Added: 
-axios - https://yarnpkg.com/package/axios
-moment - https://yarnpkg.com/package/moment
+- axios - https://yarnpkg.com/package/axios
+- moment - https://yarnpkg.com/package/moment
 
 Steps to run: 
 1. navigate to your react folder look for ./deloittetask
