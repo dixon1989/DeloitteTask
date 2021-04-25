@@ -65,12 +65,44 @@ class Launches extends React.Component {
     })
   }
 
-  handleFilterChange = filter => {
+  filteredWines = function (search, keys) {
     const { launches } = this.state;
-    console.log(launches);
-    let filter_launches = launches.filter(element => element.launch_site.site_name === filter.launchPad);
-    this.setState({ filter_launches })
-    console.log("aaaaaa", filter_launches)
+    var lowSearch = search.toLowerCase();
+      return launches.filter(function(element){
+        return keys.some(key => {
+          if(key === "flight_number") return String(element[key]).toLowerCase().includes(lowSearch) 
+          if(key === "rocket") return String(element[key]['rocket_name']).toLowerCase().includes(lowSearch)
+          if(key === "payloads") return String(element[key][0]['payload_id']).toLowerCase().includes(lowSearch)
+          return launches
+        }
+        );
+    });
+  }
+
+  handleFilterChange = filter => {
+
+    let search_filter = this.filteredWines(filter.keywords, ['flight_number', 'rocket', 'payloads'])
+
+     let filter_launches = search_filter.filter((element) => {
+
+      // if minYear has been set (not any), but the launch year is less, reject it
+      if (filter.minYear !== "Any" && moment(element.launch_date_local).format('YYYY') < filter.minYear) {
+        return false;
+      }
+
+      // same as above
+      if (filter.maxYear !== "Any" && moment(element.launch_date_local).format('YYYY') > filter.maxYear) {
+        return false;
+      }
+
+      if (filter.launchPad !== "Any" && element.launch_site.site_name.indexOf(filter.launchPad) === -1) {
+        return false;
+      }
+
+      // Passes all filters, leave it in (don't reject it)
+      return true;
+    })
+      this.setState({filter_launches})
   };
 
   /**
@@ -109,12 +141,13 @@ class Launches extends React.Component {
     };
 
     return resultObj;
+  
   };
 
   _renderLaunches = () => {
-    const { launches, filter } = this.state;
+    const { launches, filter_launches } = this.state;
 
-    const launchPadData = filter.launchPad;
+    const launchPadData = [];
 
     const launchFilter = () => {
       // do something with the filter obj
@@ -130,11 +163,12 @@ class Launches extends React.Component {
 
   render() {
     const { launches, filterOptions } = this.state;
+
     return (
       <section className={`${styles.launches} layout-l`}>
         <LaunchFilter filterOptions={filterOptions} onFilterChange={this.handleFilterChange} />
         <div className={styles.summary}>
-          <p>Showing {launches.length} Missions</p>
+          <p>Showing { launches.length } Missions</p>
         </div>
         {this._renderLaunches()}
       </section>

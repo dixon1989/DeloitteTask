@@ -96,11 +96,11 @@ LaunchItem.propTypes = {
   launchSiteName: PropTypes.string,
 
   // flight number of the rocket
-  flightNumber: PropTypes.string,
+  flightNumber: PropTypes.number,
 
   // whether the mission failed or not defined,
   // as when the launch or landing was not successful
-  missionFailed: PropTypes.string,
+  missionFailed: PropTypes.bool,
 
   // link to the mission patch image
   missionPatchLink: PropTypes.string,
