@@ -22,9 +22,9 @@ class App extends Component {
    * should scroll the page down to where the main content starts
    */
   handleScrollClick = () => {
-    alert('Implement scroll down logic');
-      // This function will define where the ref is and scroll to the ref
-      this.handleReusableComponent(this.myMainContent)
+    //alert('Implement scroll down logic');
+    // This function will define where the ref is and scroll to the ref
+    this.handleReusableComponent(this.myMainContent)
   };
 
   /**
@@ -32,10 +32,11 @@ class App extends Component {
    * the page back up to where the results start
    */
   handleBackToTopClick = () => {
-    alert('Implement back to top logic');
+    //alert('Implement back to top logic');
     this.handleReusableComponent(this.myMainContent)
   };
 
+  // Making sure the both scroll to top and bottom are using the same function
   handleReusableComponent = (content) => {
     if(content.current){
       content.current.scrollIntoView({ 

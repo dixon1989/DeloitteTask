@@ -7,7 +7,6 @@ import moment from 'moment';
 
 import { getRocketData } from '../../api';
 
-
 /**
  * Launches component responsible for showing the filter component,
  * handling the fetching and filtering of the launch data and rendering
@@ -23,10 +22,10 @@ class Launches extends React.Component {
       launches: [],
       filter_launches: [],
       filter: {
-        minYear: null,
-        maxYear: null,
-        keywords: null,
-        launchPad: null,
+        minYear: 'Any',
+        maxYear: 'Any',
+        keywords: '',
+        launchPad: 'Any',
       },
       filterOptions: {
         minYear: null,
@@ -48,8 +47,8 @@ class Launches extends React.Component {
 
   setFilter = () => {
     const { launches } = this.state;
-    let distinctYearOptions = [{ value: null, label: 'Any' }];
-    let launchPadOptions = [{ value: null, label: 'Any' }];
+    let distinctYearOptions = [{ value: 'Any', label: 'Any' }];
+    let launchPadOptions = [{ value: 'Any', label: 'Any' }];
     let distinctYear = [...new Set(launches.map(x => moment(x.launch_date_local).format('YYYY')))]
     let launchPad = [...new Set(launches.map(x => x.launch_site.site_name))]
     distinctYear.forEach(element => distinctYearOptions.push({value: element, label: element}));
@@ -73,7 +72,7 @@ class Launches extends React.Component {
           if(key === "flight_number") return String(element[key]).toLowerCase().includes(lowSearch) 
           if(key === "rocket") return String(element[key]['rocket_name']).toLowerCase().includes(lowSearch)
           if(key === "payloads") return String(element[key][0]['payload_id']).toLowerCase().includes(lowSearch)
-          return launches
+          return element
         }
         );
     });
@@ -81,9 +80,13 @@ class Launches extends React.Component {
 
   handleFilterChange = filter => {
 
+    const { launches } = this.state;
+
     let search_filter = this.filteredWines(filter.keywords, ['flight_number', 'rocket', 'payloads'])
 
-     let filter_launches = search_filter.filter((element) => {
+    let isKeyword = search_filter ? search_filter : launches
+
+    let filter_launches = isKeyword.filter((element) => {
 
       // if minYear has been set (not any), but the launch year is less, reject it
       if (filter.minYear !== "Any" && moment(element.launch_date_local).format('YYYY') < filter.minYear) {
@@ -102,7 +105,7 @@ class Launches extends React.Component {
       // Passes all filters, leave it in (don't reject it)
       return true;
     })
-      this.setState({filter_launches})
+      this.setState({ filter, filter_launches})
   };
 
   /**
@@ -144,17 +147,28 @@ class Launches extends React.Component {
   
   };
 
+
+  objFilter = () => {
+    const { launches, filter_launches, filter } = this.state;
+  if (filter.minYear === 'Any' && filter.maxYear === 'Any' && filter.launchPad === 'Any' && filter.keywords === '') {
+    return launches
+  } else {
+    return filter_launches
+  }
+}
+
   _renderLaunches = () => {
-    const { launches, filter_launches } = this.state;
+    
 
     const launchPadData = [];
+
 
     const launchFilter = () => {
       // do something with the filter obj
       return true;
     };
 
-    const filteredLaunches = launches
+    const filteredLaunches = this.objFilter()
       .map(l => this._launchDataTransform(l, launchPadData))
       .filter(launchFilter);
 
@@ -162,15 +176,15 @@ class Launches extends React.Component {
   };
 
   render() {
-    const { launches, filterOptions } = this.state;
+    const { filterOptions } = this.state;
 
     return (
       <section className={`${styles.launches} layout-l`}>
         <LaunchFilter filterOptions={filterOptions} onFilterChange={this.handleFilterChange} />
         <div className={styles.summary}>
-          <p>Showing { launches.length } Missions</p>
+          <p>Showing { this.objFilter().length } Missions</p>
         </div>
-        {this._renderLaunches()}
+        {this.objFilter().length !== 0 ? this._renderLaunches() : <div className={styles.summary}><p>No Result has been found</p></div>}
       </section>
     );
   }
